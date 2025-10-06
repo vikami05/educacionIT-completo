@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscripción</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Imágenes/EducacioIT.jpg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='seleccion_cursos.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#navbarResponsive">
+    <div class="fondo-gris"> <!--Incio Section-->
+        <div id="home"> <!-- Navbar -->
+            <nav class="navbar navbar-expand-md navbar-light fixed-top bg-white shadow-sm">
+                <div class="container"> <a class="navbar-brand" href="{{ url_for('index') }}"> <img
+                            src="{{ url_for('static', filename='Imágenes/EducacioIT.jpg') }}" alt="Logo Educación IT"
+                            height="60"> </a> <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarResponsive"> <span class="navbar-toggler-icon"></span> </button>
+                    <div class="collapse navbar-collapse" id="navbarResponsive">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Inicio</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('nosotros') }}">¿Quiénes
+                                    Somos?</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('profesores') }}">Profesores</a>
+                            </li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('cursos') }}">Cursos</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('contacto') }}">Contacto</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="container my-5">
+                <div class="row"> <!-- Columna izquierda -->
+                    <div class="col-md-6">
+                        <div class="info-izquierda info-curso p-3 bg-light rounded shadow-sm mb-4">
+                            <h4>Información</h4>
+                            <p><strong>Duración:</strong> <span id="duracion-curso"></span></p>
+                            <p><strong>Modalidad:</strong> <span id="modalidad-curso"></span></p>
+                            <p><strong>Requisitos:</strong> <span id="requisitos-curso"></span></p>
+                            <p><strong>Objetivo del curso:</strong> <span id="objetivo-curso"></span></p>
+                            <p><em>Una vez registrado, tendrás acceso inmediato al curso…</em></p>
+                        </div> <!-- Formulario de inscripción -->
+                        <div id="form-inscripcion" class="p-3 bg-light rounded shadow-sm mb-3">
+                            <h4>Formulario de Inscripción</h4>
+                            <form action="/pago" method="get"> <input type="hidden" name="curso" id="input-curso">
+                                <input type="hidden" name="precio" id="input-precio">
+                                <div class="mb-3"> <label for="nombre" class="form-label">Nombre</label> <input
+                                        type="text" class="form-control" name="nombre" id="nombre" required> </div>
+                                <div class="mb-3"> <label for="apellido" class="form-label">Apellido</label> <input
+                                        type="text" class="form-control" name="apellido" id="apellido" required> </div>
+                                <div class="mb-3"> <label for="email" class="form-label">Email</label> <input
+                                        type="email" class="form-control" name="email" id="email" required> </div>
+                                <div class="mb-3"> <label for="dni" class="form-label">DNI</label> <input type="text"
+                                        class="form-control" name="dni" id="dni" required> </div>
+                                <div class="mb-3"> <label for="telefono" class="form-label">Teléfono</label> <input
+                                        type="tel" class="form-control" name="telefono" id="telefono" required> </div>
+                                <button type="submit" class="btn btn-primary">Siguiente</button>
+                            </form>
+                        </div>
+                    </div> <!-- Columna derecha -->
+                    <div class="col-md-6">
+                        <div class="detalle-curso p-3 bg-white rounded shadow-sm">
+                            <h2 id="titulo-curso" class="mb-3"></h2> <img id="imagen-curso" src=""
+                                alt="Imagen del curso" class="img-fluid mb-3">
+                            <p><strong>Precio del curso:</strong> $<span id="precio-curso"></span></p>
+                            <h3 class="mt-3 mb-2">Plan de estudio:</h3>
+                            <div class="accordion mt-2" id="accordionCurso"></div>
+                            <div class="botones mt-3 text-center"> <a href="{{ url_for('cursos') }}#cursos"
+                                    class="btn btn-secondary btn-sm">Volver a cursos</a> </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+ const cursos = {
+     
+     "python": {
+        titulo: "Curso de Python",
+        duracion: "8 semanas",
+        modalidad: "Online asincrónico",
+        requisitos: "Ninguno, solo ganas de aprender",
+        objetivo: "Aprender Python desde cero y aplicar conceptos prácticos en proyectos sencillos.",
+        imagen: "{{ url_for('static', filename='cursos copy/python.JPG') }}",
+        precio: 25000,
+        plan: [
+                {
+                nombre: "Introducción, conceptos y entrada de datos.",
+                descripcion: "Programación básica, tipos de datos y errores."
+                },
+                {
+                    nombre: "Condicionales, bucles y listas",
+                    descripcion: "Estructuras de control y listas."
+                }, 
+                {
+                    nombre: "Módulos y funciones", 
+                    descripcion: "Funciones, módulos y scripts."
+                }, 
+                {
+                    nombre: "Aplicaciones de escritorio", 
+                    descripcion: "Tkinter y primeras aplicaciones."
+                } 
+             ] 
+    }, 
+    "java": {
+         titulo: "Curso de Java",
+         duracion: "10 semanas", 
+         modalidad: "Online asincrónico", 
+         requisitos: "Conocimientos básicos de programación", 
+         objetivo: "Crear aplicaciones robustas y portables con Java.", 
+         imagen: "{{ url_for('static', filename='cursos copy/java.JPG') }}", 
+         precio: 28000, 
+         plan: [ 
+                {
+                    nombre: "Introducción a Java",
+                    descripcion: "Sintaxis básica y primeros programas."
+                }, 
+                {
+                    nombre: "POO y estructuras de datos", 
+                    descripcion: "Clases, objetos, herencia y arrays."
+                }, 
+                {
+                    nombre: "Desarrollo de aplicaciones", 
+                    descripcion: "Interfaces gráficas y manejo de archivos."
+                }, 
+                {
+                    nombre: "Proyectos prácticos", 
+                    descripcion: "Aplicaciones completas y buenas prácticas."
+                } 
+              ] 
+    }, 
+    ".net": { 
+        titulo: "Curso de .Net", 
+        duracion: "9 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de programación", 
+        objetivo: "Crear aplicaciones escalables para web, escritorio y móviles.", 
+        imagen: "{{ url_for('static', filename='cursos copy/net.JPG') }}", 
+        precio: 27000, 
+        plan: [ 
+                {
+                    nombre: "Introducción a .Net", 
+                    descripcion: "Conceptos generales y primeros proyectos."
+                }, 
+                {
+                    nombre: "C# y programación", 
+                    descripcion: "Sintaxis, variables, condicionales y bucles."
+                }, 
+                {
+                    nombre: "Aplicaciones escalables", 
+                    descripcion: "Windows Forms, WPF y ASP.Net."
+                }, 
+                {
+                    nombre: "Proyectos prácticos", 
+                    descripcion: "Desarrollar aplicaciones completas y buenas prácticas."
+                } 
+            ] 
+    }, 
+    "javascript": { 
+        titulo: "Curso de JavaScript", 
+        duracion: "7 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Ninguno, solo ganas de aprender", 
+        objetivo: "Aprender los fundamentos de JS y desarrollar soluciones dinámicas.", 
+        imagen: "{{ url_for('static', filename='cursos copy/javascrip.JPG') }}", 
+        precio: 26000, 
+        plan: [ 
+                {
+                    nombre: "Fundamentos de JavaScript", 
+                    descripcion: "Variables, operadores y funciones."
+                }, 
+                {
+                    nombre: "DOM y eventos", 
+                    descripcion: "Manipulación del DOM y eventos."
+                }, 
+                {
+                    nombre: "Funciones avanzadas", 
+                    descripcion: "Closures, objetos, arrays y librerías."
+                }, 
+                {
+                    nombre: "Proyectos prácticos", 
+                    descripcion: "Desarrollo de apps interactivas."
+                } 
+            ] 
+    }, 
+     "ia": { 
+        titulo: "Manejo de IA", 
+        duracion: "6 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de computación", 
+        objetivo: "Aprender a usar IA para generar contenido y automatizar tareas.", 
+        imagen: "{{ url_for('static', filename='cursos copy/ia.JPG') }}", 
+        precio: 35000, 
+        plan: [ 
+                {
+                    nombre: "Introducción a IA", 
+                    descripcion: "Conceptos y aplicaciones básicas de Inteligencia Artificial."
+                }, 
+                {
+                    nombre: "Herramientas de IA", 
+                    descripcion: "Uso de modelos preentrenados y generación de contenido."
+                }, 
+                {
+                    nombre: "Automatización de tareas", 
+                    descripcion: "Integración de IA en proyectos sencillos."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Aplicación práctica de IA en un caso real."
+                } 
+            ] 
+    }, 
+    "chatgpt": { 
+        titulo: "Chat GPT", 
+        duracion: "4 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de computación", 
+        objetivo: "Aprender a interactuar y generar respuestas con Chat GPT de forma efectiva.", 
+        imagen: "{{ url_for('static', filename='cursos copy/11.JPG') }}", 
+        precio: 30000, 
+        plan: [ 
+                {
+                    nombre: "Introducción a Chat GPT", 
+                    descripcion: "Conceptos básicos de modelos de lenguaje y chatbots."
+                }, 
+                {
+                    nombre: "Prompts efectivos", 
+                    descripcion: "Cómo generar respuestas precisas y creativas."
+                }, 
+                {
+                    nombre: "Integración en proyectos", 
+                    descripcion: "Uso de Chat GPT en aplicaciones y web."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Desarrollar un bot conversacional funcional."
+                } 
+            ] 
+    }, 
+    "ia-visual": { 
+        titulo: "IA para Contenido Visual", 
+        duracion: "5 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de diseño o computación", 
+        objetivo: "Aprender a generar contenido visual atractivo con herramientas de IA.", 
+        imagen: "{{ url_for('static', filename='cursos copy/Captura1.JPG') }}", 
+        precio: 35000, 
+        plan: [ 
+                {
+                    nombre: "Fundamentos de IA Visual", 
+                    descripcion: "Introducción a modelos generativos y sus aplicaciones."
+                }, 
+                {
+                    nombre: "Herramientas creativas", 
+                    descripcion: "Uso de software y librerías para generar imágenes."
+                }, 
+                {
+                    nombre: "Integración en proyectos", 
+                    descripcion: "Cómo aplicar IA visual en sitios web y contenidos."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Generar un proyecto visual completo usando IA."
+                } 
+            ] 
+    }, 
+    "ia-avanzada": { 
+        titulo: "IA avanzada para proyectos", 
+        duracion: "8 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de programación e IA", 
+        objetivo: "Profundizar en técnicas avanzadas de IA e implementarlas en proyectos complejos.", 
+        imagen: "{{ url_for('static', filename='cursos copy/ia-generativa-1.jpeg') }}", 
+        precio: 40000, 
+        plan: [ 
+                {
+                    nombre: "Modelos avanzados de IA", 
+                    descripcion: "Redes neuronales profundas y generación de contenido complejo."
+                }, 
+                {
+                    nombre: "Optimización y entrenamiento", 
+                    escripcion: "Ajuste de hiperparámetros y datasets especializados."
+                }, 
+                {
+                    nombre: "Integración en proyectos", 
+                    descripcion: "IA avanzada aplicada a proyectos reales."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Desarrollar un proyecto completo usando IA avanzada."
+                } 
+              ] 
+    },
+    "community-manager": { 
+        titulo: "Community Manager", 
+        duracion: "6 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de computación", 
+        objetivo: "Aprender a gestionar comunidades online y fomentar la interacción con seguidores.", 
+        imagen: "{{ url_for('static', filename='cursos copy/managger.JPG') }}", 
+        precio: 20000, 
+        plan: [ 
+                {
+                    nombre: "Fundamentos de Community Management", 
+                    descripcion: "Gestión de comunidades y redes sociales."
+                }, 
+                {
+                    nombre: "Creación de contenido", 
+                    descripcion: "Diseño y publicación de contenido atractivo."
+                }, 
+                {
+                    nombre: "Estrategias de interacción", 
+                    descripcion: "Cómo aumentar engagement y fidelización."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Diseñar un plan completo para una comunidad digital."
+                } 
+              ] 
+    }, 
+    "seo": { 
+        titulo: "SEO", 
+        duracion: "5 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de marketing o computación", 
+        objetivo: "Optimizar sitios web para mejorar visibilidad en buscadores.", 
+        imagen: "{{ url_for('static', filename='cursos copy/SEO.png') }}", 
+        precio: 22000, 
+        plan: [ 
+                {
+                    nombre: "Introducción al SEO", 
+                    descripcion: "Conceptos básicos y motores de búsqueda."
+                }, 
+                {
+                    nombre: "Optimización On-Page", 
+                    descripcion: "Títulos, meta etiquetas y contenido optimizado."
+                }, 
+                {
+                    nombre: "Optimización Off-Page", 
+                    descripcion: "Backlinks, redes sociales y reputación online."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Optimizar un sitio web real o simulado."
+                } 
+              ] 
+    }, 
+    "publicidad-redes": { 
+        titulo: "Publicidad en Redes Sociales", 
+        duracion: "5 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de marketing digital", 
+        objetivo: "Crear campañas efectivas en redes sociales.", 
+        imagen: "{{ url_for('static', filename='cursos copy/META-ADS.png') }}", 
+        precio: 25000, 
+        plan: [ 
+                {
+                    nombre: "Fundamentos de publicidad", 
+                    descripcion: "Plataformas y tipos de anuncios."
+                }, 
+                {
+                    nombre: "Creación de campañas", 
+                    descripcion: "Segmentación, diseño y copywriting."
+                }, 
+                {
+                    nombre: "Optimización de anuncios", 
+                    descripcion: "Métricas y ajustes de campañas."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Lanzar una campaña completa en redes sociales."
+                } 
+              ] 
+    },
+    "marketing-contenido": { 
+        titulo: "Marketing de Contenido", 
+        duracion: "4 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de marketing digital", 
+        objetivo: "Fidelizar clientes y aumentar ventas mediante estrategias de contenido.", 
+        imagen: "{{ url_for('static', filename='cursos copy/CANVA.png') }}", 
+        precio: 18000, 
+        plan: [ 
+                {
+                    nombre: "Introducción al marketing de contenido", 
+                    descripcion: "Estrategias y objetivos."
+                }, 
+                {
+                    nombre: "Creación de contenido", 
+                    descripcion: "Escritura, imágenes y videos."
+                }, 
+                {
+                    nombre: "Distribución y SEO", 
+                    descripcion: "Difusión y optimización de contenido."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Plan de marketing de contenido completo."
+                } 
+              ] 
+    }, 
+    "intro-uiux": { 
+        titulo: "Introducción a UI/UX", 
+        duracion: "5 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Ninguno, solo interés en diseño", 
+        objetivo: "Aprender los conceptos básicos de diseño de interfaces y experiencia de usuario.", 
+        imagen: "{{ url_for('static', filename='cursos copy/ui-ux.jpg') }}", 
+        precio: 25000, 
+        plan: [ 
+                {
+                    nombre: "Fundamentos de UI/UX", 
+                    descripcion: "Principios de diseño y usabilidad."
+                }, 
+                {
+                    nombre: "Investigación de usuarios", 
+                    descripcion: "Métodos para conocer necesidades y comportamientos."
+                }, 
+                {
+                    nombre: "Prototipos y wireframes", 
+                    descripcion: "Creación de prototipos funcionales."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Diseñar una interfaz completa con experiencia de usuario óptima."
+                } 
+              ] 
+    }, 
+    "ui-animations": { 
+        titulo: "UI Animations / Microinteracciones", 
+        duracion: "4 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de UI/UX", 
+        objetivo: "Aprender a implementar animaciones y microinteracciones para mejorar la experiencia del usuario.", imagen: "{{ url_for('static', filename='cursos copy/experiencia-do-usuario-ux.jpg') }}", 
+        precio: 25000, 
+        plan: [ 
+                {
+                    nombre: "Fundamentos de animaciones", 
+                    descripcion: "Principios de movimiento y feedback visual."
+                }, 
+                {
+                    nombre: "Microinteracciones", 
+                    descripcion: "Diseño de interacciones pequeñas pero significativas."
+                }, 
+                {
+                    nombre: "Transiciones y flujo", 
+                    descripcion: "Mejorar la navegación con animaciones."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Implementar animaciones y microinteracciones en un proyecto real."
+                } 
+              ] 
+    }, 
+    "herramientas-diseno": { 
+        titulo: "Herramientas de Diseño Profesionales/Avanzado", 
+        duracion: "6 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de UI/UX", 
+        objetivo: "Dominar herramientas de diseño como Figma y Adobe XD para crear interfaces atractivas.", 
+        imagen: "{{ url_for('static', filename='cursos copy/ui.jpg') }}", 
+        precio: 22000, 
+        plan: [ 
+                {
+                    nombre: "Introducción a herramientas de diseño", 
+                    descripcion: "Figma, Adobe XD y flujos de trabajo."
+                }, 
+                {
+                    nombre: "Diseño avanzado", 
+                    descripcion: "Componentes, prototipos interactivos y estilos."
+                }, 
+                {
+                    nombre: "Optimización y colaboración", 
+                    descripcion: "Trabajo en equipo y buenas prácticas."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Diseñar un producto completo usando herramientas profesionales."
+                } 
+              ] 
+    }, 
+    "ux-productos": { 
+        titulo: "UX para productos digitales", 
+        duracion: "5 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de UI/UX", 
+        objetivo: "Aprender a diseñar productos centrados en el usuario para mejorar la experiencia digital.", 
+        imagen: "{{ url_for('static', filename='cursos copy/diseno-productos-digitales.jpg') }}", 
+        precio: 30000, 
+        plan: [ 
+                {
+                    nombre: "Investigación UX", 
+                    descripcion: "Análisis de usuarios y necesidades."
+                }, 
+                {
+                    nombre: "Diseño centrado en el usuario", 
+                    descripcion: "Aplicación de principios UX en interfaces."
+                }, 
+                {
+                    nombre: "Pruebas y feedback", 
+                    descripcion: "Evaluación de usabilidad y mejoras."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Desarrollar un producto digital con experiencia de usuario optimizada."
+                } 
+              ] 
+    }, 
+    "ciencia-datos": { 
+        itulo: "Ciencia de Datos", 
+        duracion: "6 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de computación y estadística", 
+        objetivo: "Desarrollar e implementar soluciones basadas en Big Data, Machine Learning y Deep Learning.", 
+        imagen: "{{ url_for('static', filename='cursos copy/OPTIMIZACION.png') }}", 
+        precio: 22000, 
+        plan: [ 
+                {
+                    nombre: "Fundamentos de Ciencia de Datos", 
+                    descripcion: "Introducción a Big Data y análisis de datos masivos."
+                }, 
+                {
+                    nombre: "Machine Learning básico", 
+                    descripcion: "Algoritmos y técnicas de ML aplicadas a datasets."
+                }, 
+                {
+                    nombre: "Deep Learning", 
+                    descripcion: "Redes neuronales y procesamiento de datos complejos."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Implementar un caso práctico usando Ciencia de Datos y Big Data."
+                } 
+              ] 
+    }, 
+    "introduccion-bigdata": { 
+        titulo: "Introducción a Big Data", 
+        duracion: "5 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Ninguno, solo interés en análisis de datos", 
+        objetivo: "Conocer los fundamentos del Big Data, arquitecturas distribuidas y ecosistemas de datos masivos.", imagen: "{{ url_for('static', filename='cursos copy/BigData.png') }}", 
+        precio: 24000, 
+        plan: [ 
+                {
+                    nombre: "Fundamentos de Big Data", 
+                    descripcion: "Conceptos, arquitectura y ecosistemas."
+                }, 
+                {
+                    nombre: "Hadoop y ecosistemas", 
+                    descripcion: "Introducción a Hadoop, HDFS y MapReduce."
+                }, 
+                {
+                    nombre: "Procesamiento distribuido", 
+                    descripcion: "Frameworks y análisis de datos a gran escala."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Analizar y procesar un dataset masivo como caso práctico."
+                } 
+              ] 
+    }, 
+    "ia-bigdata": { 
+        titulo: "IA y Big Data", 
+        duracion: "6 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de programación y análisis de datos", 
+        objetivo: "Aprender a manejar grandes volúmenes de datos con Hadoop y Spark para análisis distribuidos.", imagen: "{{ url_for('static', filename='cursos copy/Data.jpg') }}", 
+        precio: 28000, 
+        plan: [ 
+                {
+                    nombre: "Fundamentos de IA y Big Data", 
+                    descripcion: "Conceptos y arquitectura de datos masivos."
+                }, 
+                {
+                    nombre: "Hadoop y Spark", 
+                    descripcion: "Procesamiento distribuido de datos con frameworks populares."
+                }, 
+                {
+                    nombre: "Integración con IA", 
+                    descripcion: "Uso de algoritmos de Machine Learning sobre Big Data."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Desarrollar un análisis completo usando IA y Big Data."
+                }
+              ] 
+    }, 
+    "analisis-datos": { 
+        titulo: "Análisis de Datos", 
+        duracion: "5 semanas", 
+        modalidad: "Online asincrónico", 
+        requisitos: "Conocimientos básicos de estadísticas y programación", 
+        objetivo: "Analizar datos masivos aplicando estadísticas, machine learning y visualización con Python.", 
+        imagen: "{{ url_for('static', filename='cursos copy/POWER-BI.png') }}", 
+        precio: 30000, 
+        plan: [ 
+                {
+                    nombre: "Estadísticas y análisis de datos", 
+                    descripcion: "Herramientas y técnicas estadísticas."
+                }, 
+                {
+                    nombre: "Machine Learning aplicado", 
+                    descripcion: "Aplicación de algoritmos a datasets reales."
+                }, 
+                {
+                    nombre: "Visualización de datos", 
+                    descripcion: "Creación de gráficos y dashboards con Python."
+                }, 
+                {
+                    nombre: "Proyecto final", 
+                    descripcion: "Analizar un dataset real aplicando ML y visualización."
+                }
+              ] 
+    } 
+}; 
+const params = new URLSearchParams(window.location.search); 
+const id = params.get("id") || "python"; const curso = cursos[id]; 
+const titulo = document.getElementById("titulo-curso"); 
+const imagen = document.getElementById("imagen-curso"); 
+const accordion = document.getElementById("accordionCurso"); 
+const duracion = document.getElementById("duracion-curso"); 
+const modalidad = document.getElementById("modalidad-curso"); 
+const requisitos = document.getElementById("requisitos-curso"); 
+const objetivo = document.getElementById("objetivo-curso"); 
+const inputCurso = document.getElementById("input-curso"); 
+const inputPrecio = document.getElementById("input-precio"); 
+const precioCurso = document.getElementById("precio-curso"); 
+if(curso){
+    titulo.textContent = curso.titulo; 
+    imagen.src = curso.imagen; 
+    duracion.textContent = curso.duracion; 
+    modalidad.textContent = curso.modalidad; 
+    requisitos.textContent = curso.requisitos; 
+    objetivo.textContent = curso.objetivo; 
+    inputCurso.value = id; 
+    inputPrecio.value = curso.precio; 
+    precioCurso.textContent = curso.precio.toLocaleString(); 
+    curso.plan.forEach((modulo, index) => { 
+        const item = document.createElement("div"); 
+        item.className = "accordion-item"; 
+        item.innerHTML = `
+        <h2 class="accordion-header" id="heading${index}"> 
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="collapse${index}">
+        ${modulo.nombre} 
+        </button>
+        </h2> 
+        <div id="collapse${index}" class="accordion-collapse collapse" aria-labelledby="heading${index}" data-bs-parent="#accordionCurso"> 
+          <div class="accordion-body"> 
+          ${modulo.descripcion} 
+          </div>
+         </div> 
+         `; 
+         accordion.appendChild(item);
+          }); 
+          } else { 
+            titulo.textContent = "Curso no encontrado"; 
+            imagen.style.display = "none"; 
+            accordion.style.display = "none"; 
+            precioCurso.textContent = "No disponible"; } 
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script> <!-- Footer -->
+    <footer class="bg-white text-dark pt-5">
+        <div class="container"> <!-- Logo y Redes Sociales -->
+            <div class="row align-items-center mb-4">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0"> <img
+                        src="{{ url_for('static', filename='Imágenes/EducacioIT.jpg') }}" alt="EducaciónIT"
+                        style="height: 60px;"> </div>
+                <div class="col-md-6 text-center text-md-end"> <a href="https://www.instagram.com/" target="_blank"
+                        class="text-dark me-3" style="text-decoration: none;"> <i class="bi bi-instagram"
+                            style="font-size: 1.5rem;"></i> </a> <a href="https://wa.me/549XXXXXXXXXX" target="_blank"
+                        class="text-dark me-3" style="text-decoration: none;"> <i class="bi bi-whatsapp"
+                            style="font-size: 1.5rem;"></i> </a> <a href="tel:+549XXXXXXXXXX" class="text-dark me-3"
+                        style="text-decoration: none;"> <i class="bi bi-telephone-fill" style="font-size: 1.5rem;"></i>
+                    </a> <a href="mailto:contacto@educacionit.com.ar" class="text-dark" style="text-decoration: none;">
+                        <i class="bi bi-envelope-fill" style="font-size: 1.5rem;"></i> </a> </div>
+            </div> <!-- ¿Te podemos ayudar? -->
+            <div class="row mb-4">
+                <div class="col text-center">
+                    <h5 class="fw-bold" style="font-family: 'Quicksand', sans-serif;">¿Te podemos ayudar?</h5>
+                    <p class="mb-0" style="font-size: 1.2rem;"> <a href="tel:+549XXXXXXXXXX" class="text-dark"
+                            style="text-decoration: none;">📞 +54 9 XXXX XXXX</a> </p>
+                </div>
+            </div> <!-- Derechos reservados -->
+            <div class="row">
+                <div class="col text-center">
+                    <p class="mb-0" style="font-family: 'Quicksand', sans-serif;"> &copy; 2025 EducaciónIT. Todos los
+                        derechos reservados. </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
